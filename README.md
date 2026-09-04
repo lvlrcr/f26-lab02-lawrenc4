@@ -1,5 +1,7 @@
 # Lab 2 Starter: Availability Calculator
 
+Model used: Claude Code v2.1.260 Sonnet 5
+
 A small reservation component. Given a room's bookings and the day's business hours,
 `AvailabilityCalculator.freeSlots` computes when the room is free. It is the code you
 work in for Lab 2.

@@ -1,6 +1,7 @@
 package edu.cmu.cs214.availability;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import net.jqwik.api.Arbitraries;
@@ -33,7 +34,29 @@ class AvailabilityProperties {
         }
     }
 
-    // --- Milestone 1: add your stronger property here ---
+    /** Every minute in [dayStart, dayEnd) is covered by exactly one of: a booking, or a returned free slot. */
+    @Property
+    void everyMinuteIsBookedOrFreeNeverBothNeverNeither(@ForAll("scenarios") Scenario s) {
+        List<TimeInterval> free = calc.freeSlots(s.dayStart(), s.dayEnd(), s.bookings());
+        for (int m = s.dayStart(); m < s.dayEnd(); m++) {
+            final int minute = m;
+            boolean booked = coversMinute(s.bookings(), minute);
+            boolean reportedFree = coversMinute(free, minute);
+            assertTrue(booked != reportedFree,
+                () -> "minute " + minute + " must be covered by exactly one of booking/free slot, "
+                    + "but booked=" + booked + " and reportedFree=" + reportedFree);
+        }
+    }
+
+    /** Is {@code minute} inside any of the given half-open intervals? */
+    private static boolean coversMinute(List<TimeInterval> intervals, int minute) {
+        for (TimeInterval t : intervals) {
+            if (t.start() <= minute && minute < t.end()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /** Generates a business day plus a list of bookings (possibly unsorted, overlapping, or outside hours). */
     @Provide
