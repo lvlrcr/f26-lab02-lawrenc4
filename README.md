@@ -37,3 +37,15 @@ green once you fix it.
 - Setup: `SETUP.md`
 
 See the Lab 2 handout on the course page for the three milestones you show a TA.
+
+## Milestone 3 weaknesses
+
+Controllability (~lack of coverage)
+- No empty bookings case, which would have incorrectly returned an empty free list
+- No case where booking made before end of day => would have also returned empty free list
+- Clipping never tested
+- No touching interval (boundary) tests
+
+Observability
+- `returnedSlotsNeverOverlapABooking()`: vacuously true.
+    `free(...)` was empty when it shouldn't be, but empty lists don't conflict with anything.
